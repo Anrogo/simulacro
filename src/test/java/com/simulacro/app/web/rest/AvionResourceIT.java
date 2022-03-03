@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.simulacro.app.IntegrationTest;
 import com.simulacro.app.domain.Avion;
+import com.simulacro.app.domain.Vuelo;
 import com.simulacro.app.repository.AvionRepository;
 import com.simulacro.app.service.criteria.AvionCriteria;
 import com.simulacro.app.service.dto.AvionDTO;
@@ -593,6 +594,32 @@ class AvionResourceIT {
 
         // Get all the avionList where matricula does not contain UPDATED_MATRICULA
         defaultAvionShouldBeFound("matricula.doesNotContain=" + UPDATED_MATRICULA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAvionsByVuelosIsEqualToSomething() throws Exception {
+        // Initialize the database
+        avionRepository.saveAndFlush(avion);
+        Vuelo vuelos;
+        if (TestUtil.findAll(em, Vuelo.class).isEmpty()) {
+            vuelos = VueloResourceIT.createEntity(em);
+            em.persist(vuelos);
+            em.flush();
+        } else {
+            vuelos = TestUtil.findAll(em, Vuelo.class).get(0);
+        }
+        em.persist(vuelos);
+        em.flush();
+        avion.addVuelos(vuelos);
+        avionRepository.saveAndFlush(avion);
+        Long vuelosId = vuelos.getId();
+
+        // Get all the avionList where vuelos equals to vuelosId
+        defaultAvionShouldBeFound("vuelosId.equals=" + vuelosId);
+
+        // Get all the avionList where vuelos equals to (vuelosId + 1)
+        defaultAvionShouldNotBeFound("vuelosId.equals=" + (vuelosId + 1));
     }
 
     /**

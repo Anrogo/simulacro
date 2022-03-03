@@ -43,6 +43,7 @@ public class Vuelo implements Serializable {
     private Aeropuerto destino;
 
     @ManyToOne
+    @JsonIgnoreProperties(value = { "vuelos" }, allowSetters = true)
     private Avion avion;
 
     @ManyToOne
