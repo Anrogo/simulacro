@@ -1,0 +1,57 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="tripulacion">
+      <h2 data-cy="tripulacionDetailsHeading"><span>Tripulacion</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ tripulacion.id }}</span>
+        </dd>
+        <dt><span>Nombre</span></dt>
+        <dd>
+          <span>{{ tripulacion.nombre }}</span>
+        </dd>
+        <dt><span>Dni</span></dt>
+        <dd>
+          <span>{{ tripulacion.dni }}</span>
+        </dd>
+        <dt><span>Direccion</span></dt>
+        <dd>
+          <span>{{ tripulacion.direccion }}</span>
+        </dd>
+        <dt><span>Email</span></dt>
+        <dd>
+          <span>{{ tripulacion.email }}</span>
+        </dd>
+        <dt><span>Foto</span></dt>
+        <dd>
+          <div *ngIf="tripulacion.foto">
+            <a (click)="openFile(tripulacion.foto, tripulacion.fotoContentType)">
+              <img
+                [src]="'data:' + tripulacion.fotoContentType + ';base64,' + tripulacion.foto"
+                style="max-width: 100%"
+                alt="tripulacion image"
+              />
+            </a>
+            {{ tripulacion.fotoContentType }}, {{ byteSize(tripulacion.foto) }}
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/tripulacion', tripulacion.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+{
+  "changelogDate": "20220303133023",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "numVuelo",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "^[A-Z]{2}(?:-[0-9]{4})*$"
+    },
+    {
+      "fieldName": "hora",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Vuelo",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

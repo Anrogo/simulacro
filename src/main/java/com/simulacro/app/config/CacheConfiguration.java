@@ -48,6 +48,11 @@ public class CacheConfiguration {
             createCache(cm, com.simulacro.app.domain.User.class.getName());
             createCache(cm, com.simulacro.app.domain.Authority.class.getName());
             createCache(cm, com.simulacro.app.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.simulacro.app.domain.Piloto.class.getName());
+            createCache(cm, com.simulacro.app.domain.Tripulacion.class.getName());
+            createCache(cm, com.simulacro.app.domain.Avion.class.getName());
+            createCache(cm, com.simulacro.app.domain.Vuelo.class.getName());
+            createCache(cm, com.simulacro.app.domain.Aeropuerto.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
