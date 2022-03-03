@@ -1,6 +1,8 @@
 package com.simulacro.app.repository;
 
 import com.simulacro.app.domain.Avion;
+import com.simulacro.app.domain.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface AvionRepository extends JpaRepository<Avion, Long>, JpaSpecificationExecutor<Avion> {}
+public interface AvionRepository extends JpaRepository<Avion, Long>, JpaSpecificationExecutor<Avion> {
+    Optional<Avion> findOneOrderByEdad();
+}
