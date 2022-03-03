@@ -1,5 +1,6 @@
 package com.simulacro.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.*;
@@ -30,6 +31,14 @@ public class Vuelo implements Serializable {
     @NotNull
     @Column(name = "hora", nullable = false)
     private Instant hora;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "salidas", "llegadas" }, allowSetters = true)
+    private Aeropuerto origen;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "salidas", "llegadas" }, allowSetters = true)
+    private Aeropuerto destino;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -70,6 +79,32 @@ public class Vuelo implements Serializable {
 
     public void setHora(Instant hora) {
         this.hora = hora;
+    }
+
+    public Aeropuerto getOrigen() {
+        return this.origen;
+    }
+
+    public void setOrigen(Aeropuerto aeropuerto) {
+        this.origen = aeropuerto;
+    }
+
+    public Vuelo origen(Aeropuerto aeropuerto) {
+        this.setOrigen(aeropuerto);
+        return this;
+    }
+
+    public Aeropuerto getDestino() {
+        return this.destino;
+    }
+
+    public void setDestino(Aeropuerto aeropuerto) {
+        this.destino = aeropuerto;
+    }
+
+    public Vuelo destino(Aeropuerto aeropuerto) {
+        this.setDestino(aeropuerto);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

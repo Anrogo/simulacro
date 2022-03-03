@@ -96,6 +96,18 @@ public class VueloQueryService extends QueryService<Vuelo> {
             if (criteria.getHora() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getHora(), Vuelo_.hora));
             }
+            if (criteria.getOrigenId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getOrigenId(), root -> root.join(Vuelo_.origen, JoinType.LEFT).get(Aeropuerto_.id))
+                    );
+            }
+            if (criteria.getDestinoId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getDestinoId(), root -> root.join(Vuelo_.destino, JoinType.LEFT).get(Aeropuerto_.id))
+                    );
+            }
         }
         return specification;
     }

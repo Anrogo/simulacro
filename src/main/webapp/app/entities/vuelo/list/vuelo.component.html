@@ -35,6 +35,8 @@
           <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="numVuelo"><span>Num Vuelo</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="hora"><span>Hora</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="origen.nombre"><span>Origen</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="destino.nombre"><span>Destino</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -45,6 +47,16 @@
           </td>
           <td>{{ vuelo.numVuelo }}</td>
           <td>{{ vuelo.hora | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="vuelo.origen">
+              <a [routerLink]="['/aeropuerto', vuelo.origen?.id, 'view']">{{ vuelo.origen?.nombre }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="vuelo.destino">
+              <a [routerLink]="['/aeropuerto', vuelo.destino?.id, 'view']">{{ vuelo.destino?.nombre }}</a>
+            </div>
+          </td>
           <td class="text-end">
             <div class="btn-group">
               <button type="submit" [routerLink]="['/vuelo', vuelo.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

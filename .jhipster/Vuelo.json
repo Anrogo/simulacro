@@ -18,6 +18,19 @@
   "name": "Vuelo",
   "pagination": "pagination",
   "readOnly": false,
-  "relationships": [],
+  "relationships": [
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "aeropuerto",
+      "relationshipName": "origen",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "aeropuerto",
+      "relationshipName": "destino",
+      "relationshipType": "many-to-one"
+    }
+  ],
   "service": "serviceClass"
 }

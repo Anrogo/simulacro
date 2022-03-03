@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.simulacro.app.IntegrationTest;
+import com.simulacro.app.domain.Aeropuerto;
 import com.simulacro.app.domain.Vuelo;
 import com.simulacro.app.repository.VueloRepository;
 import com.simulacro.app.service.criteria.VueloCriteria;
@@ -338,6 +339,58 @@ class VueloResourceIT {
 
         // Get all the vueloList where hora is null
         defaultVueloShouldNotBeFound("hora.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllVuelosByOrigenIsEqualToSomething() throws Exception {
+        // Initialize the database
+        vueloRepository.saveAndFlush(vuelo);
+        Aeropuerto origen;
+        if (TestUtil.findAll(em, Aeropuerto.class).isEmpty()) {
+            origen = AeropuertoResourceIT.createEntity(em);
+            em.persist(origen);
+            em.flush();
+        } else {
+            origen = TestUtil.findAll(em, Aeropuerto.class).get(0);
+        }
+        em.persist(origen);
+        em.flush();
+        vuelo.setOrigen(origen);
+        vueloRepository.saveAndFlush(vuelo);
+        Long origenId = origen.getId();
+
+        // Get all the vueloList where origen equals to origenId
+        defaultVueloShouldBeFound("origenId.equals=" + origenId);
+
+        // Get all the vueloList where origen equals to (origenId + 1)
+        defaultVueloShouldNotBeFound("origenId.equals=" + (origenId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllVuelosByDestinoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        vueloRepository.saveAndFlush(vuelo);
+        Aeropuerto destino;
+        if (TestUtil.findAll(em, Aeropuerto.class).isEmpty()) {
+            destino = AeropuertoResourceIT.createEntity(em);
+            em.persist(destino);
+            em.flush();
+        } else {
+            destino = TestUtil.findAll(em, Aeropuerto.class).get(0);
+        }
+        em.persist(destino);
+        em.flush();
+        vuelo.setDestino(destino);
+        vueloRepository.saveAndFlush(vuelo);
+        Long destinoId = destino.getId();
+
+        // Get all the vueloList where destino equals to destinoId
+        defaultVueloShouldBeFound("destinoId.equals=" + destinoId);
+
+        // Get all the vueloList where destino equals to (destinoId + 1)
+        defaultVueloShouldNotBeFound("destinoId.equals=" + (destinoId + 1));
     }
 
     /**

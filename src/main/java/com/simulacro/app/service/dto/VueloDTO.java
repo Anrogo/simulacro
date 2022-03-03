@@ -19,6 +19,10 @@ public class VueloDTO implements Serializable {
     @NotNull
     private Instant hora;
 
+    private AeropuertoDTO origen;
+
+    private AeropuertoDTO destino;
+
     public Long getId() {
         return id;
     }
@@ -41,6 +45,22 @@ public class VueloDTO implements Serializable {
 
     public void setHora(Instant hora) {
         this.hora = hora;
+    }
+
+    public AeropuertoDTO getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(AeropuertoDTO origen) {
+        this.origen = origen;
+    }
+
+    public AeropuertoDTO getDestino() {
+        return destino;
+    }
+
+    public void setDestino(AeropuertoDTO destino) {
+        this.destino = destino;
     }
 
     @Override
@@ -71,6 +91,8 @@ public class VueloDTO implements Serializable {
             "id=" + getId() +
             ", numVuelo='" + getNumVuelo() + "'" +
             ", hora='" + getHora() + "'" +
+            ", origen=" + getOrigen() +
+            ", destino=" + getDestino() +
             "}";
     }
 }

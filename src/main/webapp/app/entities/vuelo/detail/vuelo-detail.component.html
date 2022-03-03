@@ -22,6 +22,18 @@
         <dd>
           <span>{{ vuelo.hora | formatMediumDatetime }}</span>
         </dd>
+        <dt><span>Origen</span></dt>
+        <dd>
+          <div *ngIf="vuelo.origen">
+            <a [routerLink]="['/aeropuerto', vuelo.origen?.id, 'view']">{{ vuelo.origen?.nombre }}</a>
+          </div>
+        </dd>
+        <dt><span>Destino</span></dt>
+        <dd>
+          <div *ngIf="vuelo.destino">
+            <a [routerLink]="['/aeropuerto', vuelo.destino?.id, 'view']">{{ vuelo.destino?.nombre }}</a>
+          </div>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

@@ -8,6 +8,8 @@ import { of, Subject, from } from 'rxjs';
 
 import { VueloService } from '../service/vuelo.service';
 import { IVuelo, Vuelo } from '../vuelo.model';
+import { IAeropuerto } from 'app/entities/aeropuerto/aeropuerto.model';
+import { AeropuertoService } from 'app/entities/aeropuerto/service/aeropuerto.service';
 
 import { VueloUpdateComponent } from './vuelo-update.component';
 
@@ -16,6 +18,7 @@ describe('Vuelo Management Update Component', () => {
   let fixture: ComponentFixture<VueloUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let vueloService: VueloService;
+  let aeropuertoService: AeropuertoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -37,18 +40,46 @@ describe('Vuelo Management Update Component', () => {
     fixture = TestBed.createComponent(VueloUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
     vueloService = TestBed.inject(VueloService);
+    aeropuertoService = TestBed.inject(AeropuertoService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
+    it('Should call Aeropuerto query and add missing value', () => {
+      const vuelo: IVuelo = { id: 456 };
+      const origen: IAeropuerto = { id: 34038 };
+      vuelo.origen = origen;
+      const destino: IAeropuerto = { id: 69703 };
+      vuelo.destino = destino;
+
+      const aeropuertoCollection: IAeropuerto[] = [{ id: 33008 }];
+      jest.spyOn(aeropuertoService, 'query').mockReturnValue(of(new HttpResponse({ body: aeropuertoCollection })));
+      const additionalAeropuertos = [origen, destino];
+      const expectedCollection: IAeropuerto[] = [...additionalAeropuertos, ...aeropuertoCollection];
+      jest.spyOn(aeropuertoService, 'addAeropuertoToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ vuelo });
+      comp.ngOnInit();
+
+      expect(aeropuertoService.query).toHaveBeenCalled();
+      expect(aeropuertoService.addAeropuertoToCollectionIfMissing).toHaveBeenCalledWith(aeropuertoCollection, ...additionalAeropuertos);
+      expect(comp.aeropuertosSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const vuelo: IVuelo = { id: 456 };
+      const origen: IAeropuerto = { id: 81311 };
+      vuelo.origen = origen;
+      const destino: IAeropuerto = { id: 25090 };
+      vuelo.destino = destino;
 
       activatedRoute.data = of({ vuelo });
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(vuelo));
+      expect(comp.aeropuertosSharedCollection).toContain(origen);
+      expect(comp.aeropuertosSharedCollection).toContain(destino);
     });
   });
 
@@ -113,6 +144,16 @@ describe('Vuelo Management Update Component', () => {
       expect(vueloService.update).toHaveBeenCalledWith(vuelo);
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Tracking relationships identifiers', () => {
+    describe('trackAeropuertoById', () => {
+      it('Should return tracked Aeropuerto primary key', () => {
+        const entity = { id: 123 };
+        const trackResult = comp.trackAeropuertoById(0, entity);
+        expect(trackResult).toEqual(entity.id);
+      });
     });
   });
 });

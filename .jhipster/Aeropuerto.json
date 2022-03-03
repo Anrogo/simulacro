@@ -21,6 +21,19 @@
   "name": "Aeropuerto",
   "pagination": "pagination",
   "readOnly": false,
-  "relationships": [],
+  "relationships": [
+    {
+      "otherEntityName": "vuelo",
+      "otherEntityRelationshipName": "origen",
+      "relationshipName": "salidas",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "vuelo",
+      "otherEntityRelationshipName": "destino",
+      "relationshipName": "llegadas",
+      "relationshipType": "one-to-many"
+    }
+  ],
   "service": "serviceClass"
 }

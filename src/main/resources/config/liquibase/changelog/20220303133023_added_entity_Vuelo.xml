@@ -20,6 +20,12 @@
             <column name="hora" type="${datetimeType}">
                 <constraints nullable="false" />
             </column>
+            <column name="origen_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="destino_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="vuelo" columnName="hora" columnDataType="${datetimeType}"/>

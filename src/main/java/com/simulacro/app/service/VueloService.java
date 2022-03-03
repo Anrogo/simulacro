@@ -76,6 +76,15 @@ public class VueloService {
     }
 
     /**
+     * Get all the vuelos with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    public Page<VueloDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return vueloRepository.findAllWithEagerRelationships(pageable).map(vueloMapper::toDto);
+    }
+
+    /**
      * Get one vuelo by id.
      *
      * @param id the id of the entity.
@@ -84,7 +93,7 @@ public class VueloService {
     @Transactional(readOnly = true)
     public Optional<VueloDTO> findOne(Long id) {
         log.debug("Request to get Vuelo : {}", id);
-        return vueloRepository.findById(id).map(vueloMapper::toDto);
+        return vueloRepository.findOneWithEagerRelationships(id).map(vueloMapper::toDto);
     }
 
     /**

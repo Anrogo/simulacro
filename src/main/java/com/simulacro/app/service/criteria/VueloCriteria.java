@@ -33,6 +33,10 @@ public class VueloCriteria implements Serializable, Criteria {
 
     private InstantFilter hora;
 
+    private LongFilter origenId;
+
+    private LongFilter destinoId;
+
     private Boolean distinct;
 
     public VueloCriteria() {}
@@ -41,6 +45,8 @@ public class VueloCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.numVuelo = other.numVuelo == null ? null : other.numVuelo.copy();
         this.hora = other.hora == null ? null : other.hora.copy();
+        this.origenId = other.origenId == null ? null : other.origenId.copy();
+        this.destinoId = other.destinoId == null ? null : other.destinoId.copy();
         this.distinct = other.distinct;
     }
 
@@ -94,6 +100,36 @@ public class VueloCriteria implements Serializable, Criteria {
         this.hora = hora;
     }
 
+    public LongFilter getOrigenId() {
+        return origenId;
+    }
+
+    public LongFilter origenId() {
+        if (origenId == null) {
+            origenId = new LongFilter();
+        }
+        return origenId;
+    }
+
+    public void setOrigenId(LongFilter origenId) {
+        this.origenId = origenId;
+    }
+
+    public LongFilter getDestinoId() {
+        return destinoId;
+    }
+
+    public LongFilter destinoId() {
+        if (destinoId == null) {
+            destinoId = new LongFilter();
+        }
+        return destinoId;
+    }
+
+    public void setDestinoId(LongFilter destinoId) {
+        this.destinoId = destinoId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -115,13 +151,15 @@ public class VueloCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(numVuelo, that.numVuelo) &&
             Objects.equals(hora, that.hora) &&
+            Objects.equals(origenId, that.origenId) &&
+            Objects.equals(destinoId, that.destinoId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, numVuelo, hora, distinct);
+        return Objects.hash(id, numVuelo, hora, origenId, destinoId, distinct);
     }
 
     // prettier-ignore
@@ -131,6 +169,8 @@ public class VueloCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (numVuelo != null ? "numVuelo=" + numVuelo + ", " : "") +
             (hora != null ? "hora=" + hora + ", " : "") +
+            (origenId != null ? "origenId=" + origenId + ", " : "") +
+            (destinoId != null ? "destinoId=" + destinoId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
