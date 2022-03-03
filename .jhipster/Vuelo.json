@@ -30,6 +30,26 @@
       "otherEntityName": "aeropuerto",
       "relationshipName": "destino",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "matricula",
+      "otherEntityName": "avion",
+      "relationshipName": "avion",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "dni",
+      "otherEntityName": "piloto",
+      "relationshipName": "piloto",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "dni",
+      "otherEntityName": "tripulacion",
+      "otherEntityRelationshipName": "vuelos",
+      "ownerSide": true,
+      "relationshipName": "tripulante",
+      "relationshipType": "many-to-many"
     }
   ],
   "service": "serviceClass"

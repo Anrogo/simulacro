@@ -26,9 +26,29 @@
             <column name="destino_id" type="bigint">
                 <constraints nullable="true" />
             </column>
+            <column name="avion_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="piloto_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="vuelo" columnName="hora" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <changeSet id="20220303133023-1-relations" author="jhipster">
+
+        <createTable tableName="rel_vuelo__tripulante">
+            <column name="tripulante_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vuelo_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="vuelo_id, tripulante_id" tableName="rel_vuelo__tripulante"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

@@ -68,6 +68,51 @@
             </option>
           </select>
         </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_avion">Avion</label>
+          <select class="form-control" id="field_avion" data-cy="avion" name="avion" formControlName="avion">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="avionOption.id === editForm.get('avion')!.value?.id ? editForm.get('avion')!.value : avionOption"
+              *ngFor="let avionOption of avionsSharedCollection; trackBy: trackAvionById"
+            >
+              {{ avionOption.matricula }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_piloto">Piloto</label>
+          <select class="form-control" id="field_piloto" data-cy="piloto" name="piloto" formControlName="piloto">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="pilotoOption.id === editForm.get('piloto')!.value?.id ? editForm.get('piloto')!.value : pilotoOption"
+              *ngFor="let pilotoOption of pilotosSharedCollection; trackBy: trackPilotoById"
+            >
+              {{ pilotoOption.dni }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label for="field_tripulantes">Tripulante</label>
+          <select
+            class="form-control"
+            id="field_tripulantes"
+            data-cy="tripulante"
+            multiple
+            name="tripulantes"
+            formControlName="tripulantes"
+          >
+            <option
+              [ngValue]="getSelectedTripulacion(tripulacionOption, editForm.get('tripulantes')!.value)"
+              *ngFor="let tripulacionOption of tripulacionsSharedCollection; trackBy: trackTripulacionById"
+            >
+              {{ tripulacionOption.dni }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <div>

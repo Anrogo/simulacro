@@ -37,6 +37,12 @@ public class VueloCriteria implements Serializable, Criteria {
 
     private LongFilter destinoId;
 
+    private LongFilter avionId;
+
+    private LongFilter pilotoId;
+
+    private LongFilter tripulanteId;
+
     private Boolean distinct;
 
     public VueloCriteria() {}
@@ -47,6 +53,9 @@ public class VueloCriteria implements Serializable, Criteria {
         this.hora = other.hora == null ? null : other.hora.copy();
         this.origenId = other.origenId == null ? null : other.origenId.copy();
         this.destinoId = other.destinoId == null ? null : other.destinoId.copy();
+        this.avionId = other.avionId == null ? null : other.avionId.copy();
+        this.pilotoId = other.pilotoId == null ? null : other.pilotoId.copy();
+        this.tripulanteId = other.tripulanteId == null ? null : other.tripulanteId.copy();
         this.distinct = other.distinct;
     }
 
@@ -130,6 +139,51 @@ public class VueloCriteria implements Serializable, Criteria {
         this.destinoId = destinoId;
     }
 
+    public LongFilter getAvionId() {
+        return avionId;
+    }
+
+    public LongFilter avionId() {
+        if (avionId == null) {
+            avionId = new LongFilter();
+        }
+        return avionId;
+    }
+
+    public void setAvionId(LongFilter avionId) {
+        this.avionId = avionId;
+    }
+
+    public LongFilter getPilotoId() {
+        return pilotoId;
+    }
+
+    public LongFilter pilotoId() {
+        if (pilotoId == null) {
+            pilotoId = new LongFilter();
+        }
+        return pilotoId;
+    }
+
+    public void setPilotoId(LongFilter pilotoId) {
+        this.pilotoId = pilotoId;
+    }
+
+    public LongFilter getTripulanteId() {
+        return tripulanteId;
+    }
+
+    public LongFilter tripulanteId() {
+        if (tripulanteId == null) {
+            tripulanteId = new LongFilter();
+        }
+        return tripulanteId;
+    }
+
+    public void setTripulanteId(LongFilter tripulanteId) {
+        this.tripulanteId = tripulanteId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -153,13 +207,16 @@ public class VueloCriteria implements Serializable, Criteria {
             Objects.equals(hora, that.hora) &&
             Objects.equals(origenId, that.origenId) &&
             Objects.equals(destinoId, that.destinoId) &&
+            Objects.equals(avionId, that.avionId) &&
+            Objects.equals(pilotoId, that.pilotoId) &&
+            Objects.equals(tripulanteId, that.tripulanteId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, numVuelo, hora, origenId, destinoId, distinct);
+        return Objects.hash(id, numVuelo, hora, origenId, destinoId, avionId, pilotoId, tripulanteId, distinct);
     }
 
     // prettier-ignore
@@ -171,6 +228,9 @@ public class VueloCriteria implements Serializable, Criteria {
             (hora != null ? "hora=" + hora + ", " : "") +
             (origenId != null ? "origenId=" + origenId + ", " : "") +
             (destinoId != null ? "destinoId=" + destinoId + ", " : "") +
+            (avionId != null ? "avionId=" + avionId + ", " : "") +
+            (pilotoId != null ? "pilotoId=" + pilotoId + ", " : "") +
+            (tripulanteId != null ? "tripulanteId=" + tripulanteId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

@@ -3,6 +3,8 @@ package com.simulacro.app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -39,6 +41,21 @@ public class Vuelo implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = { "salidas", "llegadas" }, allowSetters = true)
     private Aeropuerto destino;
+
+    @ManyToOne
+    private Avion avion;
+
+    @ManyToOne
+    private Piloto piloto;
+
+    @ManyToMany
+    @JoinTable(
+        name = "rel_vuelo__tripulante",
+        joinColumns = @JoinColumn(name = "vuelo_id"),
+        inverseJoinColumns = @JoinColumn(name = "tripulante_id")
+    )
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Tripulacion> tripulantes = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -104,6 +121,55 @@ public class Vuelo implements Serializable {
 
     public Vuelo destino(Aeropuerto aeropuerto) {
         this.setDestino(aeropuerto);
+        return this;
+    }
+
+    public Avion getAvion() {
+        return this.avion;
+    }
+
+    public void setAvion(Avion avion) {
+        this.avion = avion;
+    }
+
+    public Vuelo avion(Avion avion) {
+        this.setAvion(avion);
+        return this;
+    }
+
+    public Piloto getPiloto() {
+        return this.piloto;
+    }
+
+    public void setPiloto(Piloto piloto) {
+        this.piloto = piloto;
+    }
+
+    public Vuelo piloto(Piloto piloto) {
+        this.setPiloto(piloto);
+        return this;
+    }
+
+    public Set<Tripulacion> getTripulantes() {
+        return this.tripulantes;
+    }
+
+    public void setTripulantes(Set<Tripulacion> tripulacions) {
+        this.tripulantes = tripulacions;
+    }
+
+    public Vuelo tripulantes(Set<Tripulacion> tripulacions) {
+        this.setTripulantes(tripulacions);
+        return this;
+    }
+
+    public Vuelo addTripulante(Tripulacion tripulacion) {
+        this.tripulantes.add(tripulacion);
+        return this;
+    }
+
+    public Vuelo removeTripulante(Tripulacion tripulacion) {
+        this.tripulantes.remove(tripulacion);
         return this;
     }
 

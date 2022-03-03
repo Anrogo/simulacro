@@ -55,6 +55,7 @@ public class CacheConfiguration {
             createCache(cm, com.simulacro.app.domain.Aeropuerto.class.getName());
             createCache(cm, com.simulacro.app.domain.Aeropuerto.class.getName() + ".salidas");
             createCache(cm, com.simulacro.app.domain.Aeropuerto.class.getName() + ".llegadas");
+            createCache(cm, com.simulacro.app.domain.Vuelo.class.getName() + ".tripulantes");
             // jhipster-needle-ehcache-add-entry
         };
     }

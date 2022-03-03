@@ -2,7 +2,9 @@ package com.simulacro.app.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.validation.constraints.*;
 
 /**
@@ -22,6 +24,12 @@ public class VueloDTO implements Serializable {
     private AeropuertoDTO origen;
 
     private AeropuertoDTO destino;
+
+    private AvionDTO avion;
+
+    private PilotoDTO piloto;
+
+    private Set<TripulacionDTO> tripulantes = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -63,6 +71,30 @@ public class VueloDTO implements Serializable {
         this.destino = destino;
     }
 
+    public AvionDTO getAvion() {
+        return avion;
+    }
+
+    public void setAvion(AvionDTO avion) {
+        this.avion = avion;
+    }
+
+    public PilotoDTO getPiloto() {
+        return piloto;
+    }
+
+    public void setPiloto(PilotoDTO piloto) {
+        this.piloto = piloto;
+    }
+
+    public Set<TripulacionDTO> getTripulantes() {
+        return tripulantes;
+    }
+
+    public void setTripulantes(Set<TripulacionDTO> tripulantes) {
+        this.tripulantes = tripulantes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -93,6 +125,9 @@ public class VueloDTO implements Serializable {
             ", hora='" + getHora() + "'" +
             ", origen=" + getOrigen() +
             ", destino=" + getDestino() +
+            ", avion=" + getAvion() +
+            ", piloto=" + getPiloto() +
+            ", tripulantes=" + getTripulantes() +
             "}";
     }
 }

@@ -19,5 +19,29 @@
                                  constraintName="fk_vuelo__destino_id"
                                  referencedColumnNames="id"
                                  referencedTableName="aeropuerto"/>
+
+        <addForeignKeyConstraint baseColumnNames="avion_id"
+                                 baseTableName="vuelo"
+                                 constraintName="fk_vuelo__avion_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="avion"/>
+
+        <addForeignKeyConstraint baseColumnNames="piloto_id"
+                                 baseTableName="vuelo"
+                                 constraintName="fk_vuelo__piloto_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="piloto"/>
+
+        <addForeignKeyConstraint baseColumnNames="vuelo_id"
+                                 baseTableName="rel_vuelo__tripulante"
+                                 constraintName="fk_rel_vuelo__tripulante__vuelo_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="vuelo"/>
+
+        <addForeignKeyConstraint baseColumnNames="tripulante_id"
+                                 baseTableName="rel_vuelo__tripulante"
+                                 constraintName="fk_rel_vuelo__tripulante__tripulante_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tripulacion"/>
     </changeSet>
 </databaseChangeLog>

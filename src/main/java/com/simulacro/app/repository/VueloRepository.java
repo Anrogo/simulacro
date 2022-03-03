@@ -13,28 +13,32 @@ import org.springframework.stereotype.Repository;
  * Spring Data SQL repository for the Vuelo entity.
  */
 @Repository
-public interface VueloRepository extends JpaRepository<Vuelo, Long>, JpaSpecificationExecutor<Vuelo> {
+public interface VueloRepository extends VueloRepositoryWithBagRelationships, JpaRepository<Vuelo, Long>, JpaSpecificationExecutor<Vuelo> {
     default Optional<Vuelo> findOneWithEagerRelationships(Long id) {
-        return this.findOneWithToOneRelationships(id);
+        return this.fetchBagRelationships(this.findOneWithToOneRelationships(id));
     }
 
     default List<Vuelo> findAllWithEagerRelationships() {
-        return this.findAllWithToOneRelationships();
+        return this.fetchBagRelationships(this.findAllWithToOneRelationships());
     }
 
     default Page<Vuelo> findAllWithEagerRelationships(Pageable pageable) {
-        return this.findAllWithToOneRelationships(pageable);
+        return this.fetchBagRelationships(this.findAllWithToOneRelationships(pageable));
     }
 
     @Query(
-        value = "select distinct vuelo from Vuelo vuelo left join fetch vuelo.origen left join fetch vuelo.destino",
+        value = "select distinct vuelo from Vuelo vuelo left join fetch vuelo.origen left join fetch vuelo.destino left join fetch vuelo.avion left join fetch vuelo.piloto",
         countQuery = "select count(distinct vuelo) from Vuelo vuelo"
     )
     Page<Vuelo> findAllWithToOneRelationships(Pageable pageable);
 
-    @Query("select distinct vuelo from Vuelo vuelo left join fetch vuelo.origen left join fetch vuelo.destino")
+    @Query(
+        "select distinct vuelo from Vuelo vuelo left join fetch vuelo.origen left join fetch vuelo.destino left join fetch vuelo.avion left join fetch vuelo.piloto"
+    )
     List<Vuelo> findAllWithToOneRelationships();
 
-    @Query("select vuelo from Vuelo vuelo left join fetch vuelo.origen left join fetch vuelo.destino where vuelo.id =:id")
+    @Query(
+        "select vuelo from Vuelo vuelo left join fetch vuelo.origen left join fetch vuelo.destino left join fetch vuelo.avion left join fetch vuelo.piloto where vuelo.id =:id"
+    )
     Optional<Vuelo> findOneWithToOneRelationships(@Param("id") Long id);
 }

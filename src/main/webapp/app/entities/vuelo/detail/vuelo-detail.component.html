@@ -34,6 +34,25 @@
             <a [routerLink]="['/aeropuerto', vuelo.destino?.id, 'view']">{{ vuelo.destino?.nombre }}</a>
           </div>
         </dd>
+        <dt><span>Avion</span></dt>
+        <dd>
+          <div *ngIf="vuelo.avion">
+            <a [routerLink]="['/avion', vuelo.avion?.id, 'view']">{{ vuelo.avion?.matricula }}</a>
+          </div>
+        </dd>
+        <dt><span>Piloto</span></dt>
+        <dd>
+          <div *ngIf="vuelo.piloto">
+            <a [routerLink]="['/piloto', vuelo.piloto?.id, 'view']">{{ vuelo.piloto?.dni }}</a>
+          </div>
+        </dd>
+        <dt><span>Tripulante</span></dt>
+        <dd>
+          <span *ngFor="let tripulante of vuelo.tripulantes; let last = last">
+            <a [routerLink]="['/tripulacion', tripulante?.id, 'view']">{{ tripulante.dni }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

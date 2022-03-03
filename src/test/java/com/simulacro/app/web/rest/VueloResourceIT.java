@@ -2,26 +2,37 @@ package com.simulacro.app.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.simulacro.app.IntegrationTest;
 import com.simulacro.app.domain.Aeropuerto;
+import com.simulacro.app.domain.Avion;
+import com.simulacro.app.domain.Piloto;
+import com.simulacro.app.domain.Tripulacion;
 import com.simulacro.app.domain.Vuelo;
 import com.simulacro.app.repository.VueloRepository;
+import com.simulacro.app.service.VueloService;
 import com.simulacro.app.service.criteria.VueloCriteria;
 import com.simulacro.app.service.dto.VueloDTO;
 import com.simulacro.app.service.mapper.VueloMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link VueloResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class VueloResourceIT {
@@ -50,8 +62,14 @@ class VueloResourceIT {
     @Autowired
     private VueloRepository vueloRepository;
 
+    @Mock
+    private VueloRepository vueloRepositoryMock;
+
     @Autowired
     private VueloMapper vueloMapper;
+
+    @Mock
+    private VueloService vueloServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -175,6 +193,24 @@ class VueloResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(vuelo.getId().intValue())))
             .andExpect(jsonPath("$.[*].numVuelo").value(hasItem(DEFAULT_NUM_VUELO)))
             .andExpect(jsonPath("$.[*].hora").value(hasItem(DEFAULT_HORA.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllVuelosWithEagerRelationshipsIsEnabled() throws Exception {
+        when(vueloServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restVueloMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(vueloServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllVuelosWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(vueloServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restVueloMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(vueloServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -391,6 +427,84 @@ class VueloResourceIT {
 
         // Get all the vueloList where destino equals to (destinoId + 1)
         defaultVueloShouldNotBeFound("destinoId.equals=" + (destinoId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllVuelosByAvionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        vueloRepository.saveAndFlush(vuelo);
+        Avion avion;
+        if (TestUtil.findAll(em, Avion.class).isEmpty()) {
+            avion = AvionResourceIT.createEntity(em);
+            em.persist(avion);
+            em.flush();
+        } else {
+            avion = TestUtil.findAll(em, Avion.class).get(0);
+        }
+        em.persist(avion);
+        em.flush();
+        vuelo.setAvion(avion);
+        vueloRepository.saveAndFlush(vuelo);
+        Long avionId = avion.getId();
+
+        // Get all the vueloList where avion equals to avionId
+        defaultVueloShouldBeFound("avionId.equals=" + avionId);
+
+        // Get all the vueloList where avion equals to (avionId + 1)
+        defaultVueloShouldNotBeFound("avionId.equals=" + (avionId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllVuelosByPilotoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        vueloRepository.saveAndFlush(vuelo);
+        Piloto piloto;
+        if (TestUtil.findAll(em, Piloto.class).isEmpty()) {
+            piloto = PilotoResourceIT.createEntity(em);
+            em.persist(piloto);
+            em.flush();
+        } else {
+            piloto = TestUtil.findAll(em, Piloto.class).get(0);
+        }
+        em.persist(piloto);
+        em.flush();
+        vuelo.setPiloto(piloto);
+        vueloRepository.saveAndFlush(vuelo);
+        Long pilotoId = piloto.getId();
+
+        // Get all the vueloList where piloto equals to pilotoId
+        defaultVueloShouldBeFound("pilotoId.equals=" + pilotoId);
+
+        // Get all the vueloList where piloto equals to (pilotoId + 1)
+        defaultVueloShouldNotBeFound("pilotoId.equals=" + (pilotoId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllVuelosByTripulanteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        vueloRepository.saveAndFlush(vuelo);
+        Tripulacion tripulante;
+        if (TestUtil.findAll(em, Tripulacion.class).isEmpty()) {
+            tripulante = TripulacionResourceIT.createEntity(em);
+            em.persist(tripulante);
+            em.flush();
+        } else {
+            tripulante = TestUtil.findAll(em, Tripulacion.class).get(0);
+        }
+        em.persist(tripulante);
+        em.flush();
+        vuelo.addTripulante(tripulante);
+        vueloRepository.saveAndFlush(vuelo);
+        Long tripulanteId = tripulante.getId();
+
+        // Get all the vueloList where tripulante equals to tripulanteId
+        defaultVueloShouldBeFound("tripulanteId.equals=" + tripulanteId);
+
+        // Get all the vueloList where tripulante equals to (tripulanteId + 1)
+        defaultVueloShouldNotBeFound("tripulanteId.equals=" + (tripulanteId + 1));
     }
 
     /**

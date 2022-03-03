@@ -10,6 +10,12 @@ import { VueloService } from '../service/vuelo.service';
 import { IVuelo, Vuelo } from '../vuelo.model';
 import { IAeropuerto } from 'app/entities/aeropuerto/aeropuerto.model';
 import { AeropuertoService } from 'app/entities/aeropuerto/service/aeropuerto.service';
+import { IAvion } from 'app/entities/avion/avion.model';
+import { AvionService } from 'app/entities/avion/service/avion.service';
+import { IPiloto } from 'app/entities/piloto/piloto.model';
+import { PilotoService } from 'app/entities/piloto/service/piloto.service';
+import { ITripulacion } from 'app/entities/tripulacion/tripulacion.model';
+import { TripulacionService } from 'app/entities/tripulacion/service/tripulacion.service';
 
 import { VueloUpdateComponent } from './vuelo-update.component';
 
@@ -19,6 +25,9 @@ describe('Vuelo Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let vueloService: VueloService;
   let aeropuertoService: AeropuertoService;
+  let avionService: AvionService;
+  let pilotoService: PilotoService;
+  let tripulacionService: TripulacionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -41,6 +50,9 @@ describe('Vuelo Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     vueloService = TestBed.inject(VueloService);
     aeropuertoService = TestBed.inject(AeropuertoService);
+    avionService = TestBed.inject(AvionService);
+    pilotoService = TestBed.inject(PilotoService);
+    tripulacionService = TestBed.inject(TripulacionService);
 
     comp = fixture.componentInstance;
   });
@@ -67,12 +79,75 @@ describe('Vuelo Management Update Component', () => {
       expect(comp.aeropuertosSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Avion query and add missing value', () => {
+      const vuelo: IVuelo = { id: 456 };
+      const avion: IAvion = { id: 67364 };
+      vuelo.avion = avion;
+
+      const avionCollection: IAvion[] = [{ id: 5314 }];
+      jest.spyOn(avionService, 'query').mockReturnValue(of(new HttpResponse({ body: avionCollection })));
+      const additionalAvions = [avion];
+      const expectedCollection: IAvion[] = [...additionalAvions, ...avionCollection];
+      jest.spyOn(avionService, 'addAvionToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ vuelo });
+      comp.ngOnInit();
+
+      expect(avionService.query).toHaveBeenCalled();
+      expect(avionService.addAvionToCollectionIfMissing).toHaveBeenCalledWith(avionCollection, ...additionalAvions);
+      expect(comp.avionsSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('Should call Piloto query and add missing value', () => {
+      const vuelo: IVuelo = { id: 456 };
+      const piloto: IPiloto = { id: 14476 };
+      vuelo.piloto = piloto;
+
+      const pilotoCollection: IPiloto[] = [{ id: 78976 }];
+      jest.spyOn(pilotoService, 'query').mockReturnValue(of(new HttpResponse({ body: pilotoCollection })));
+      const additionalPilotos = [piloto];
+      const expectedCollection: IPiloto[] = [...additionalPilotos, ...pilotoCollection];
+      jest.spyOn(pilotoService, 'addPilotoToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ vuelo });
+      comp.ngOnInit();
+
+      expect(pilotoService.query).toHaveBeenCalled();
+      expect(pilotoService.addPilotoToCollectionIfMissing).toHaveBeenCalledWith(pilotoCollection, ...additionalPilotos);
+      expect(comp.pilotosSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('Should call Tripulacion query and add missing value', () => {
+      const vuelo: IVuelo = { id: 456 };
+      const tripulantes: ITripulacion[] = [{ id: 27358 }];
+      vuelo.tripulantes = tripulantes;
+
+      const tripulacionCollection: ITripulacion[] = [{ id: 22494 }];
+      jest.spyOn(tripulacionService, 'query').mockReturnValue(of(new HttpResponse({ body: tripulacionCollection })));
+      const additionalTripulacions = [...tripulantes];
+      const expectedCollection: ITripulacion[] = [...additionalTripulacions, ...tripulacionCollection];
+      jest.spyOn(tripulacionService, 'addTripulacionToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ vuelo });
+      comp.ngOnInit();
+
+      expect(tripulacionService.query).toHaveBeenCalled();
+      expect(tripulacionService.addTripulacionToCollectionIfMissing).toHaveBeenCalledWith(tripulacionCollection, ...additionalTripulacions);
+      expect(comp.tripulacionsSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const vuelo: IVuelo = { id: 456 };
       const origen: IAeropuerto = { id: 81311 };
       vuelo.origen = origen;
       const destino: IAeropuerto = { id: 25090 };
       vuelo.destino = destino;
+      const avion: IAvion = { id: 84608 };
+      vuelo.avion = avion;
+      const piloto: IPiloto = { id: 42707 };
+      vuelo.piloto = piloto;
+      const tripulantes: ITripulacion = { id: 13325 };
+      vuelo.tripulantes = [tripulantes];
 
       activatedRoute.data = of({ vuelo });
       comp.ngOnInit();
@@ -80,6 +155,9 @@ describe('Vuelo Management Update Component', () => {
       expect(comp.editForm.value).toEqual(expect.objectContaining(vuelo));
       expect(comp.aeropuertosSharedCollection).toContain(origen);
       expect(comp.aeropuertosSharedCollection).toContain(destino);
+      expect(comp.avionsSharedCollection).toContain(avion);
+      expect(comp.pilotosSharedCollection).toContain(piloto);
+      expect(comp.tripulacionsSharedCollection).toContain(tripulantes);
     });
   });
 
@@ -153,6 +231,58 @@ describe('Vuelo Management Update Component', () => {
         const entity = { id: 123 };
         const trackResult = comp.trackAeropuertoById(0, entity);
         expect(trackResult).toEqual(entity.id);
+      });
+    });
+
+    describe('trackAvionById', () => {
+      it('Should return tracked Avion primary key', () => {
+        const entity = { id: 123 };
+        const trackResult = comp.trackAvionById(0, entity);
+        expect(trackResult).toEqual(entity.id);
+      });
+    });
+
+    describe('trackPilotoById', () => {
+      it('Should return tracked Piloto primary key', () => {
+        const entity = { id: 123 };
+        const trackResult = comp.trackPilotoById(0, entity);
+        expect(trackResult).toEqual(entity.id);
+      });
+    });
+
+    describe('trackTripulacionById', () => {
+      it('Should return tracked Tripulacion primary key', () => {
+        const entity = { id: 123 };
+        const trackResult = comp.trackTripulacionById(0, entity);
+        expect(trackResult).toEqual(entity.id);
+      });
+    });
+  });
+
+  describe('Getting selected relationships', () => {
+    describe('getSelectedTripulacion', () => {
+      it('Should return option if no Tripulacion is selected', () => {
+        const option = { id: 123 };
+        const result = comp.getSelectedTripulacion(option);
+        expect(result === option).toEqual(true);
+      });
+
+      it('Should return selected Tripulacion for according option', () => {
+        const option = { id: 123 };
+        const selected = { id: 123 };
+        const selected2 = { id: 456 };
+        const result = comp.getSelectedTripulacion(option, [selected2, selected]);
+        expect(result === selected).toEqual(true);
+        expect(result === selected2).toEqual(false);
+        expect(result === option).toEqual(false);
+      });
+
+      it('Should return option if this Tripulacion is not selected', () => {
+        const option = { id: 123 };
+        const selected = { id: 456 };
+        const result = comp.getSelectedTripulacion(option, [selected]);
+        expect(result === option).toEqual(true);
+        expect(result === selected).toEqual(false);
       });
     });
   });

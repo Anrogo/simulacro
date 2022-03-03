@@ -36,12 +36,12 @@ public class Aeropuerto implements Serializable {
 
     @OneToMany(mappedBy = "origen")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "origen", "destino" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "origen", "destino", "avion", "piloto", "tripulantes" }, allowSetters = true)
     private Set<Vuelo> salidas = new HashSet<>();
 
     @OneToMany(mappedBy = "destino")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "origen", "destino" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "origen", "destino", "avion", "piloto", "tripulantes" }, allowSetters = true)
     private Set<Vuelo> llegadas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
